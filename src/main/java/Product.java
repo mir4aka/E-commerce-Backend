@@ -17,7 +17,8 @@ public class Product {
         return price;
     }
 
-    public String getInfo() {
+    @Override
+    public String toString() {
         return this.label + " " + this.price;
     }
 }

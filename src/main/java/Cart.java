@@ -5,14 +5,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Cart {
-    private final List<CartItem> cartItems; // избрани продукти
+    private final List<CartItem> cartItems = new ArrayList<>(); // избрани продукти
     private double deliveryFee;
 
-    public Cart() {
-        this.cartItems = new ArrayList<>();
-    }
-
-    double getVAT() {
+    private double getVAT() {
         return this.calculateProductsPrices() * 0.2;
     }
 
@@ -22,7 +18,7 @@ public class Cart {
 
         if (this.calculateProductsPrices() < 100) {
             this.deliveryFee = 10;
-        } else if (this.calculateProductsPrices() > 100 && this.calculateProductsPrices() < 200) {
+        } else if (this.calculateProductsPrices() >= 100 && this.calculateProductsPrices() < 200) {
             this.deliveryFee = 5;
         } else {
             this.deliveryFee = 0;
@@ -38,15 +34,17 @@ public class Cart {
     public void removeItemsFromCart(CartItem cartItem) {
 //        String output = "";
         if (cartItems.isEmpty()) { //проверка дали количката е празна
-            System.out.println("Cart is empty, there is nothing to remove");
+//            System.out.println("Cart is empty, there is nothing to remove");
+            return;
         }
 
 
         if (!this.cartItems.contains(cartItem)) { //проверка дали избраният за махане продукт го има въобще в количката
-            System.out.println("Item is not in the cart");
+//            System.out.println("Item is not in the cart");
+            return;
         } else {
             this.cartItems.remove(cartItem);
-            System.out.println("Item removed: " + cartItem.product.getLabel());
+//            System.out.println("Item removed: " + cartItem.product.getLabel());
         }
 //
 //        return output;
