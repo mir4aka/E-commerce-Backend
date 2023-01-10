@@ -1,4 +1,4 @@
-package main.java;
+package eu.deltasource;
 
 public class Application {
     public static void main(String[] args) {

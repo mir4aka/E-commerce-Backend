@@ -1,4 +1,4 @@
-package main.java;
+package eu.deltasource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,13 +8,8 @@ public class Cart {
     private final List<CartItem> cartItems = new ArrayList<>(); // избрани продукти
     private double deliveryFee;
 
-    private double getVAT() {
-        return this.calculateProductsPrices() * 0.2;
-    }
-
-
-    public double calculateFinalPrice() { //изчисляване на крайна цена на продуктите в кошницата заедно с ДДСто
-        double sumWithVAT = this.calculateProductsPrices() + getVAT();
+    public double calculateFinalPrice() { //изчисляване на крайна цена на продуктите в кошницата заедно с ДДСто и доставката
+        double finalPrice = this.calculateProductsPrices() + getVAT();
 
         if (this.calculateProductsPrices() < 100) {
             this.deliveryFee = 10;
@@ -24,7 +19,7 @@ public class Cart {
             this.deliveryFee = 0;
         }
 
-        return sumWithVAT + deliveryFee;
+        return finalPrice + deliveryFee;
     }
 
     public void addItemsToCart(CartItem cartItem) {
@@ -32,41 +27,50 @@ public class Cart {
     }
 
     public void removeItemsFromCart(CartItem cartItem) {
-//        String output = "";
-        if (cartItems.isEmpty()) { //проверка дали количката е празна
-//            System.out.println("Cart is empty, there is nothing to remove");
+        if (checkIfTheCartIsEmpty()) { //проверка дали количката е празна, ако е празна, изкарва резултат
             return;
         }
-
 
         if (!this.cartItems.contains(cartItem)) { //проверка дали избраният за махане продукт го има въобще в количката
-//            System.out.println("Item is not in the cart");
-            return;
+            throw new IllegalArgumentException("Item is not in the cart");
         } else {
             this.cartItems.remove(cartItem);
-//            System.out.println("Item removed: " + cartItem.product.getLabel());
         }
-//
-//        return output;
     }
 
     public double calculateProductsPrices() { // изчисляване на сумата на продукта според количеството
-        double totalPrice = 0;
+        double productPrice = 0;
         for (CartItem cartItem : this.cartItems) {
-            totalPrice += cartItem.product.getPrice() * cartItem.getQuantity();
+            productPrice += cartItem.product.getPrice() * cartItem.getQuantity();
         }
-        return totalPrice;
+
+        return productPrice;
     }
 
+    private double getVAT() {
+        return this.calculateProductsPrices() * 0.2;
+    }
+
+    private boolean checkIfTheCartIsEmpty() {
+        if (this.cartItems.isEmpty()) {
+            return true;
+        }
+
+        return false;
+    }
 
     @Override
     public String toString() {
-        if(this.cartItems.isEmpty()) {
-            return "Your cart is empty.";
+        if (checkIfTheCartIsEmpty()) {
+            deliveryFee = 0;
+            return "Your cart is empty";
         }
 
         String items = cartItems.stream().map(CartItem::toString).collect(Collectors.joining(", "));
-        return "items: " + items + " with delivery fee " + deliveryFee
-                + "\nfinal price: " + this.calculateFinalPrice();
+
+        return String.format("""
+                Items in cart: %s
+                Delivery fee: %.2f lv.
+                Final price:  %.2f lv.""", items, this.deliveryFee, this.calculateFinalPrice());
     }
 }
