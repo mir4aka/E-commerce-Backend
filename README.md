@@ -1,1 +1,1 @@
-E-commerce APP
+An application that simulates an online shopping cart that can containt different types of items and there are several things to do with the cart - increase/decrease the quantity of the product, add/remove an item to the cart.
